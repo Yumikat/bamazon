@@ -2,13 +2,14 @@ var mysql = require("mysql");
 var inquirer = require("inquirer");
 var idChosen = 0;
 var unitChosen = 0;
+var stock = 0;
 
 var connection = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "root",
     port: 3306,
-    database: "bamazon_DB"
+    database: "bamazonDB"
 });
 
 connection.connect(function (err) {
@@ -113,9 +114,12 @@ function units() {
 
                 else if (response.unit > parseInt(res[0].stock_quantity)) {
                     console.log(`Insufficient quantity!!!`);
-                    connection.end();
+                    units();
                 } else {
                     console.log(`You have successfully purchased ` + response.unit + ` item(s) with id ${idChosen}.`);
+                    // stock = res[0].stock_quantity;
+                    // console.log(`How many are in stock: ` + stock);
+                    // console.log(`Amount chosen to purchase: ` + unitChosen);
                     updateQuantity();
                 }
             });
@@ -123,5 +127,28 @@ function units() {
 }
 
 function updateQuantity() {
-    
+    connection.query("UPDATE products SET ? WHERE ?",
+        [
+            { stock_quantity: (stock - unitChosen) },
+            { item_id: idChosen }],
+        function (err, res) {
+            if (err) throw err;
+
+            // console.log(`You have successfully bought ${unitChosen} of item id ${idChosen}.`);
+            totalCost();
+        });
 }
+
+function totalCost() {
+    connection.query("SELECT price FROM products WHERE ?", { item_id: idChosen }, function (err, res) {
+        if (err) throw err;
+        var price = parseFloat(res[0].price);
+        // console.log(price);
+        // console.log(unitChosen);
+        var cost = parseFloat(price*unitChosen);
+        console.log(`Your total cost is $` + cost +`.`);
+        console.log(`\n--------------------------------------\n`);
+        begin();
+    });
+}
+
