@@ -112,6 +112,10 @@ function units() {
             connection.query("SELECT stock_quantity FROM products WHERE ?", { item_id: idChosen }, function (err, res) {
                 if (err) throw err;
 
+                // if((response.unit > parseInt(res[0].stock_quantity)) && (parseInt(res[0].stock_quantity == 0))) {
+                //     console.log(`Sorry, we are currently out of that product!`);
+                //     units();
+                // }
                 else if (response.unit > parseInt(res[0].stock_quantity)) {
                     console.log(`Insufficient quantity!!!`);
                     units();

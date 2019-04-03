@@ -22,3 +22,5 @@ Item id: 10, Name: belgian chocolates, Price: 7.
 You have chosen the item id 1.
 ? How many units would you like to purchase? 3
 Insufficient quantity!!! -->
+
+<!--Video walkthrough: https://drive.google.com/file/d/1KWag5fk43RL_qwN0GqS-0zwDXx4WMwxm/view -->
